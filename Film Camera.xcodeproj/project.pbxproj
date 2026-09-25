@@ -1,0 +1,554 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 110;
+	objects = {
+
+/* Begin PBXContainerItemProxy section */
+		8BCFEC6330668572003E27FA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8BCFEC4B30668570003E27FA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8BCFEC5230668570003E27FA;
+			remoteInfo = "Film Camera";
+		};
+		8BCFEC6D30668572003E27FA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8BCFEC4B30668570003E27FA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8BCFEC5230668570003E27FA;
+			remoteInfo = "Film Camera";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		8BCFEC5330668570003E27FA /* Film Camera.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Film Camera.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		8BCFEC6230668572003E27FA /* Film CameraTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Film CameraTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		8BCFEC6C30668572003E27FA /* Film CameraUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Film CameraUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		8BCFEC5530668570003E27FA /* Film Camera */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "Film Camera";
+			sourceTree = "<group>";
+		};
+		8BCFEC6530668572003E27FA /* Film CameraTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "Film CameraTests";
+			sourceTree = "<group>";
+		};
+		8BCFEC6F30668572003E27FA /* Film CameraUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "Film CameraUITests";
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		8BCFEC5030668570003E27FA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			files = (
+			);
+		};
+		8BCFEC5F30668572003E27FA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			files = (
+			);
+		};
+		8BCFEC6930668572003E27FA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			files = (
+			);
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		8BCFEC4A30668570003E27FA = {
+			isa = PBXGroup;
+			children = (
+				8BCFEC5530668570003E27FA /* Film Camera */,
+				8BCFEC6530668572003E27FA /* Film CameraTests */,
+				8BCFEC6F30668572003E27FA /* Film CameraUITests */,
+				8BCFEC5430668570003E27FA /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		8BCFEC5430668570003E27FA /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8BCFEC5330668570003E27FA /* Film Camera.app */,
+				8BCFEC6230668572003E27FA /* Film CameraTests.xctest */,
+				8BCFEC6C30668572003E27FA /* Film CameraUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		8BCFEC5230668570003E27FA /* Film Camera */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8BCFEC7430668572003E27FA /* Build configuration list for PBXNativeTarget "Film Camera" */;
+			buildPhases = (
+				8BCFEC4F30668570003E27FA /* Sources */,
+				8BCFEC5030668570003E27FA /* Frameworks */,
+				8BCFEC5130668570003E27FA /* Resources */,
+			);
+			buildRules = (
+			);
+			fileSystemSynchronizedGroups = (
+				8BCFEC5530668570003E27FA /* Film Camera */,
+			);
+			name = "Film Camera";
+			productName = "Film Camera";
+			productReference = 8BCFEC5330668570003E27FA /* Film Camera.app */;
+			productType = "com.apple.product-type.application";
+		};
+		8BCFEC6130668572003E27FA /* Film CameraTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8BCFEC7730668572003E27FA /* Build configuration list for PBXNativeTarget "Film CameraTests" */;
+			buildPhases = (
+				8BCFEC5E30668572003E27FA /* Sources */,
+				8BCFEC5F30668572003E27FA /* Frameworks */,
+				8BCFEC6030668572003E27FA /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				8BCFEC6430668572003E27FA /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				8BCFEC6530668572003E27FA /* Film CameraTests */,
+			);
+			name = "Film CameraTests";
+			productName = "Film CameraTests";
+			productReference = 8BCFEC6230668572003E27FA /* Film CameraTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		8BCFEC6B30668572003E27FA /* Film CameraUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8BCFEC7A30668572003E27FA /* Build configuration list for PBXNativeTarget "Film CameraUITests" */;
+			buildPhases = (
+				8BCFEC6830668572003E27FA /* Sources */,
+				8BCFEC6930668572003E27FA /* Frameworks */,
+				8BCFEC6A30668572003E27FA /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				8BCFEC6E30668572003E27FA /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				8BCFEC6F30668572003E27FA /* Film CameraUITests */,
+			);
+			name = "Film CameraUITests";
+			productName = "Film CameraUITests";
+			productReference = 8BCFEC6C30668572003E27FA /* Film CameraUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		8BCFEC4B30668570003E27FA /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2700;
+				LastUpgradeCheck = 2700;
+				TargetAttributes = {
+					8BCFEC5230668570003E27FA = {
+						CreatedOnToolsVersion = 27.0;
+					};
+					8BCFEC6130668572003E27FA = {
+						CreatedOnToolsVersion = 27.0;
+						TestTargetID = 8BCFEC5230668570003E27FA;
+					};
+					8BCFEC6B30668572003E27FA = {
+						CreatedOnToolsVersion = 27.0;
+						TestTargetID = 8BCFEC5230668570003E27FA;
+					};
+				};
+			};
+			buildConfigurationList = 8BCFEC4E30668570003E27FA /* Build configuration list for PBXProject "Film Camera" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 8BCFEC4A30668570003E27FA;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 8BCFEC5430668570003E27FA /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				8BCFEC5230668570003E27FA /* Film Camera */,
+				8BCFEC6130668572003E27FA /* Film CameraTests */,
+				8BCFEC6B30668572003E27FA /* Film CameraUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		8BCFEC5130668570003E27FA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			files = (
+			);
+		};
+		8BCFEC6030668572003E27FA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			files = (
+			);
+		};
+		8BCFEC6A30668572003E27FA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			files = (
+			);
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8BCFEC4F30668570003E27FA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			files = (
+			);
+		};
+		8BCFEC5E30668572003E27FA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			files = (
+			);
+		};
+		8BCFEC6830668572003E27FA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			files = (
+			);
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		8BCFEC6430668572003E27FA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8BCFEC5230668570003E27FA /* Film Camera */;
+			targetProxy = 8BCFEC6330668572003E27FA /* PBXContainerItemProxy */;
+		};
+		8BCFEC6E30668572003E27FA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8BCFEC5230668570003E27FA /* Film Camera */;
+			targetProxy = 8BCFEC6D30668572003E27FA /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		8BCFEC7230668572003E27FA /* Debug configuration for PBXProject "Film Camera" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 8T6AKJB57Z;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		8BCFEC7330668572003E27FA /* Release configuration for PBXProject "Film Camera" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 8T6AKJB57Z;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		8BCFEC7530668572003E27FA /* Debug configuration for PBXNativeTarget "Film Camera" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 8T6AKJB57Z;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.github.yahiaangelo.Film-Camera";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		8BCFEC7630668572003E27FA /* Release configuration for PBXNativeTarget "Film Camera" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 8T6AKJB57Z;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.github.yahiaangelo.Film-Camera";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		8BCFEC7830668572003E27FA /* Debug configuration for PBXNativeTarget "Film CameraTests" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 8T6AKJB57Z;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.github.yahiaangelo.Film-CameraTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Film Camera.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Film Camera";
+			};
+			name = Debug;
+		};
+		8BCFEC7930668572003E27FA /* Release configuration for PBXNativeTarget "Film CameraTests" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 8T6AKJB57Z;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.github.yahiaangelo.Film-CameraTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Film Camera.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Film Camera";
+			};
+			name = Release;
+		};
+		8BCFEC7B30668572003E27FA /* Debug configuration for PBXNativeTarget "Film CameraUITests" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 8T6AKJB57Z;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.github.yahiaangelo.Film-CameraUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "Film Camera";
+			};
+			name = Debug;
+		};
+		8BCFEC7C30668572003E27FA /* Release configuration for PBXNativeTarget "Film CameraUITests" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 8T6AKJB57Z;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.github.yahiaangelo.Film-CameraUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "Film Camera";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		8BCFEC4E30668570003E27FA /* Build configuration list for PBXProject "Film Camera" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8BCFEC7230668572003E27FA /* Debug configuration for PBXProject "Film Camera" */,
+				8BCFEC7330668572003E27FA /* Release configuration for PBXProject "Film Camera" */,
+			);
+			defaultConfigurationName = Release;
+		};
+		8BCFEC7430668572003E27FA /* Build configuration list for PBXNativeTarget "Film Camera" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8BCFEC7530668572003E27FA /* Debug configuration for PBXNativeTarget "Film Camera" */,
+				8BCFEC7630668572003E27FA /* Release configuration for PBXNativeTarget "Film Camera" */,
+			);
+			defaultConfigurationName = Release;
+		};
+		8BCFEC7730668572003E27FA /* Build configuration list for PBXNativeTarget "Film CameraTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8BCFEC7830668572003E27FA /* Debug configuration for PBXNativeTarget "Film CameraTests" */,
+				8BCFEC7930668572003E27FA /* Release configuration for PBXNativeTarget "Film CameraTests" */,
+			);
+			defaultConfigurationName = Release;
+		};
+		8BCFEC7A30668572003E27FA /* Build configuration list for PBXNativeTarget "Film CameraUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8BCFEC7B30668572003E27FA /* Debug configuration for PBXNativeTarget "Film CameraUITests" */,
+				8BCFEC7C30668572003E27FA /* Release configuration for PBXNativeTarget "Film CameraUITests" */,
+			);
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 8BCFEC4B30668570003E27FA /* Project object */;
+	validationLevel = 1;
+}
