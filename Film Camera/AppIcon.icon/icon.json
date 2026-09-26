@@ -1,0 +1,58 @@
+{
+  "fill": {
+    "automatic-gradient": "srgb:1.00000,0.97255,0.94510,1.00000"
+  },
+  "fill-specializations": [
+    {
+      "appearance": "dark",
+      "value": {
+        "automatic-gradient": "srgb:0.13725,0.12157,0.09020,1.00000"
+      }
+    }
+  ],
+  "groups": [
+    {
+      "name": "lens",
+      "layers": [
+        {
+          "name": "lens",
+          "image-name": "lens.svg",
+          "glass": true
+        }
+      ],
+      "shadow": {
+        "kind": "neutral",
+        "opacity": 0.5
+      },
+      "translucency": {
+        "enabled": true,
+        "value": 0.3
+      },
+      "specular": true
+    },
+    {
+      "name": "frame",
+      "layers": [
+        {
+          "name": "frame",
+          "image-name": "frame.svg",
+          "glass": true
+        }
+      ],
+      "shadow": {
+        "kind": "layer-color",
+        "opacity": 0.5
+      },
+      "translucency": {
+        "enabled": true,
+        "value": 0.1
+      },
+      "specular": true
+    }
+  ],
+  "supported-platforms": {
+    "squares": [
+      "iOS"
+    ]
+  }
+}
