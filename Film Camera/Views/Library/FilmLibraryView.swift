@@ -18,12 +18,24 @@ struct FilmLibraryView: View {
     @Environment(CameraModel.self) private var camera
     @Environment(\.dismiss) private var dismiss
 
-    @State private var scope: Scope = .explore
+    @State private var scope: Scope = FilmLibraryView.initialScope
+
+    private static var initialScope: Scope {
+        #if DEBUG
+        // For screenshot automation: `-FCLibraryScope myFilms`.
+        if let raw = UserDefaults.standard.string(forKey: "FCLibraryScope"),
+           let scope = Scope.allCases.first(where: { "\($0)" == raw }) { return scope }
+        #endif
+        return .explore
+    }
     @State private var category: String?
     @State private var searchText = ""
     @State private var isSearchPresented = false
     @FocusState private var isSearchFocused: Bool
     @State private var confirmsDownloadAll = false
+
+    /// Shown wherever film names are listed.
+    static let trademarkNotice = "Film names are trademarks of their respective owners and are used only to describe the look each LUT emulates. Film Camera is not affiliated with or endorsed by any film manufacturer."
 
     var body: some View {
         NavigationStack {
@@ -109,8 +121,17 @@ struct FilmLibraryView: View {
                 }
             }
             .padding(.horizontal)
-            .padding(.bottom, 24)
+
+            if !films.isEmpty {
+                Text(Self.trademarkNotice)
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, 24)
+                    .padding(.top, 28)
+            }
         }
+        .contentMargins(.bottom, 24, for: .scrollContent)
         .safeAreaBar(edge: .bottom) {
             if let progress = library.bulkDownload {
                 BulkDownloadBar(progress: progress) { library.cancelBulkDownload() }
@@ -177,7 +198,10 @@ struct FilmLibraryView: View {
                 .onDelete { offsets in offsets.map { films[$0] }.forEach(remove) }
                 .onMove { library.moveMyFilms(from: $0, to: $1) }
             } footer: {
-                Text("Films in this list appear in the camera's film strip and work offline.")
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("Films in this list appear in the camera's film strip and work offline.")
+                    Text(Self.trademarkNotice)
+                }
             }
         }
         .overlay {
