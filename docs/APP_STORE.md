@@ -91,7 +91,7 @@ They show the simulator's built-in sample scene. To use your own photos, take re
 2. Launch it with a film, adjustments and optional sheet passed as launch arguments. Debug builds accept `-FCOpenSheet library|adjustments`; Release builds compile it out.
    ```sh
    xcrun simctl status_bar booted override --time 9:41 --batteryState charged --batteryLevel 100
-   xcrun simctl launch booted io.github.yahiaangelo.Film-Camera \
+   xcrun simctl launch booted io.github.yahiaangelo.FilmCamera \
      -selectedFilm "luts/bw/kodak_tri-x_400.cube" -FCOpenSheet adjustments
    xcrun simctl io booted screenshot raw/2-bw.png
    ```
@@ -154,7 +154,7 @@ Record with iOS Screen Recording on a physical iPhone running the latest iOS. Fi
 ## Checklist before uploading
 
 - [ ] Signing team set to your App Store team (Signing & Capabilities)
-- [ ] App ID `io.github.yahiaangelo.Film-Camera` registered, and the app record created in App Store Connect
+- [ ] App ID `io.github.yahiaangelo.FilmCamera` registered, and the app record created in App Store Connect
 - [ ] `MARKETING_VERSION` (1.0) and `CURRENT_PROJECT_VERSION` (1) set; bump the build number for every upload
 - [ ] Product → Archive → Distribute App → App Store Connect
 - [ ] Screenshots, listing text, privacy answers and review notes filled in

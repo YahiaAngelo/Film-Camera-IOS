@@ -18,7 +18,8 @@ struct AdjustmentsSheet: View {
         @Bindable var camera = camera
         NavigationStack {
             List {
-                ForEach(AdjustmentControl.Group.allCases, id: \.self) { group in
+                // The Super 8 section only applies in Super 8 mode.
+                ForEach(AdjustmentControl.Group.allCases.filter { $0 != .super8 || camera.mode == .super8 }, id: \.self) { group in
                     Section(group.rawValue) {
                         ForEach(AdjustmentControl.all.filter { $0.group == group }) { control in
                             AdjustmentRow(control: control, value: $camera.adjustments[dynamicMember: control.keyPath])

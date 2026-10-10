@@ -22,9 +22,12 @@ struct CameraScreen: View {
                 .padding(.horizontal, 12)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             FilmStrip(onBrowse: { showsLibrary = true })
+            // The mode switcher also separates the film strip from the shutter,
+            // and the extra bottom padding lifts the shutter to where thumbs rest.
+            ModePicker()
             bottomBar
                 .padding(.horizontal, 28)
-                .padding(.bottom, 8)
+                .padding(.bottom, 28)
         }
         .padding(.top, 4)
         .background(Color.black.ignoresSafeArea())
@@ -61,7 +64,11 @@ struct CameraScreen: View {
         .onChange(of: scenePhase) { _, phase in
             switch phase {
             case .active: Task { await camera.start() }
-            case .background: camera.stop()
+            case .background:
+                Task {
+                    await camera.stopRecording()
+                    camera.stop()
+                }
             default: break
             }
         }
@@ -74,7 +81,23 @@ struct CameraScreen: View {
         return HStack(spacing: 12) {
             GlassEffectContainer(spacing: 12) {
                 HStack(spacing: 12) {
-                    if camera.deviceInfo?.hasFlash ?? false {
+                    if camera.mode == .super8 {
+                        Button {
+                            Task { await camera.toggleSuper8FrameRate() }
+                        } label: {
+                            Text("\(camera.super8FrameRate)")
+                                .font(.system(size: 15, weight: .bold).monospacedDigit())
+                                .foregroundStyle(Color.filmPrimary)
+                                .contentTransition(.numericText(value: Double(camera.super8FrameRate)))
+                                .frame(width: 44, height: 44)
+                                .contentShape(.circle)
+                        }
+                        .buttonStyle(.plain)
+                        .glassEffect(.regular.interactive(), in: .circle)
+                        .disabled(camera.isRecording)
+                        .accessibilityLabel("\(camera.super8FrameRate) frames per second")
+                        .accessibilityHint("Switches between 18 and 24 frames per second")
+                    } else if camera.deviceInfo?.hasFlash ?? false {
                         glassIcon(camera.flashMode.systemImage, label: "Flash \(camera.flashMode.title)",
                                   isOn: camera.flashMode != .off) {
                             let modes = CameraModel.FlashMode.allCases
@@ -143,8 +166,13 @@ struct CameraScreen: View {
 
             Spacer()
 
-            ShutterButton(isBusy: camera.isCapturing) {
-                Task { await camera.capture() }
+            ShutterButton(style: shutterStyle, isBusy: camera.isCapturing || camera.isFinishingRecording) {
+                Task {
+                    switch camera.mode {
+                    case .photo: await camera.capture()
+                    case .super8: await camera.toggleRecording()
+                    }
+                }
             }
             .disabled(camera.status != .running)
 
@@ -161,7 +189,16 @@ struct CameraScreen: View {
             }
             .buttonStyle(.plain)
             .glassEffect(.regular.interactive(), in: .circle)
+            .disabled(camera.isRecording)
+            .opacity(camera.isRecording ? 0.4 : 1)
             .accessibilityLabel("Switch Camera")
+        }
+    }
+
+    private var shutterStyle: ShutterButton.Style {
+        switch camera.mode {
+        case .photo: .photo
+        case .super8: camera.isRecording ? .recording : .record
         }
     }
 

@@ -16,6 +16,7 @@
 
 - **Live film preview.** Every camera frame runs through a Metal pipeline: exposure and white balance, the film's 3D LUT, then tone, color and film effects. Full-resolution photos go through the same shaders, so the saved photo matches the viewfinder.
 - **Around 300 film stocks** from the [Film-Luts](https://github.com/YahiaAngelo/Film-Luts) collection: color negative, slide, black & white, instant, cinema print and Fuji X-Trans simulations. Browse and search them, download one or all of them for offline use, and arrange the ones you use in your film strip.
+- **Super 8 video mode.** Records at a real 18 or 24 fps, with the long per-frame exposure that brings. Each film frame gets gate weave, exposure flicker, dust and scratches, a rounded projector gate, coarse grain and a light flash when a clip starts. A 50 ft cartridge counter ends the roll after 3:20 (at 18 fps), like the real thing. Video is recorded in 4:3 with sound.
 - **Works offline from the first launch.** Eight popular stocks are built in, along with the full catalog.
 - **Film effects:**
   - Grain: two-octave, re-seeded every frame, with a soft-light response so highlights stay clean

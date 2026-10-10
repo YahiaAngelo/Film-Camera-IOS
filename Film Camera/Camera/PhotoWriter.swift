@@ -17,7 +17,7 @@ nonisolated enum PhotoWriter {
         var errorDescription: String? {
             switch self {
             case .encodingFailed: "The photo could not be encoded."
-            case .notAuthorized: "Film Camera needs permission to add photos to your library."
+            case .notAuthorized: "Film Camera needs permission to add photos and videos to your library."
             }
         }
     }
@@ -50,6 +50,20 @@ nonisolated enum PhotoWriter {
         try await PHPhotoLibrary.shared().performChanges {
             let request = PHAssetCreationRequest.forAsset()
             request.addResource(with: .photo, data: data, options: nil)
+        }
+    }
+
+    /// Moves a recorded video into the photo library.
+    static func saveVideoToLibrary(_ url: URL) async throws {
+        let status = await PHPhotoLibrary.requestAuthorization(for: .addOnly)
+        guard status == .authorized || status == .limited else {
+            try? FileManager.default.removeItem(at: url)
+            throw WriteError.notAuthorized
+        }
+        try await PHPhotoLibrary.shared().performChanges {
+            let options = PHAssetResourceCreationOptions()
+            options.shouldMoveFile = true
+            PHAssetCreationRequest.forAsset().addResource(with: .video, fileURL: url, options: options)
         }
     }
 

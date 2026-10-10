@@ -22,8 +22,41 @@ nonisolated struct FilmAdjustments: Codable, Equatable, Sendable {
     var glow: Float = 0          // 0...1
     var halation: Float = 0      // 0...1
     var vignette: Float = 0.2    // 0...1
+    // Super 8 mode only
+    var gateWeave: Float = 0.5   // 0...1
+    var flicker: Float = 0.5     // 0...1
+    var dust: Float = 0.4        // 0...1
 
     static let `default` = FilmAdjustments()
+
+    init() {}
+
+    /// Missing keys fall back to defaults, so settings saved by older versions
+    /// still load when new adjustments are added.
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let d = FilmAdjustments.default
+        func value(_ key: CodingKeys, _ fallback: Float) throws -> Float {
+            try container.decodeIfPresent(Float.self, forKey: key) ?? fallback
+        }
+        lutIntensity = try value(.lutIntensity, d.lutIntensity)
+        exposure = try value(.exposure, d.exposure)
+        contrast = try value(.contrast, d.contrast)
+        highlights = try value(.highlights, d.highlights)
+        shadows = try value(.shadows, d.shadows)
+        saturation = try value(.saturation, d.saturation)
+        temperature = try value(.temperature, d.temperature)
+        tint = try value(.tint, d.tint)
+        fade = try value(.fade, d.fade)
+        grain = try value(.grain, d.grain)
+        grainSize = try value(.grainSize, d.grainSize)
+        glow = try value(.glow, d.glow)
+        halation = try value(.halation, d.halation)
+        vignette = try value(.vignette, d.vignette)
+        gateWeave = try value(.gateWeave, d.gateWeave)
+        flicker = try value(.flicker, d.flicker)
+        dust = try value(.dust, d.dust)
+    }
 }
 
 /// Describes one slider in the adjustments panel.
@@ -33,6 +66,7 @@ struct AdjustmentControl: Identifiable {
         case light = "Light"
         case color = "Color"
         case effects = "Effects"
+        case super8 = "Super 8"
     }
 
     let id: String
@@ -68,5 +102,8 @@ struct AdjustmentControl: Identifiable {
         .init(id: "glow", title: "Glow", systemImage: "sparkles", group: .effects, range: 0...1, keyPath: \.glow),
         .init(id: "halation", title: "Halation", systemImage: "rays", group: .effects, range: 0...1, keyPath: \.halation),
         .init(id: "vignette", title: "Vignette", systemImage: "circle.dashed", group: .effects, range: 0...1, keyPath: \.vignette),
+        .init(id: "gateWeave", title: "Gate Weave", systemImage: "arrow.up.and.down.and.arrow.left.and.right", group: .super8, range: 0...1, keyPath: \.gateWeave),
+        .init(id: "flicker", title: "Flicker", systemImage: "light.max", group: .super8, range: 0...1, keyPath: \.flicker),
+        .init(id: "dust", title: "Dust & Scratches", systemImage: "aqi.medium", group: .super8, range: 0...1, keyPath: \.dust),
     ]
 }

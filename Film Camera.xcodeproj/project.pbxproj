@@ -375,11 +375,12 @@
 				ENABLE_PREVIEWS = YES;
 				"EXCLUDED_SOURCE_FILE_NAMES[sdk=iphoneos*]" = SampleScene.jpg;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = "Film Camera";
+				INFOPLIST_KEY_CFBundleDisplayName = "Film Camera (Film Simulations)";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.photography";
-				INFOPLIST_KEY_NSCameraUsageDescription = "Film Camera uses the camera to take photos with film looks.";
-				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Film Camera saves your photos to your library.";
+				INFOPLIST_KEY_NSCameraUsageDescription = "Film Camera uses the camera to take photos and Super 8 videos with film looks.";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Film Camera records sound with your Super 8 videos.";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Film Camera saves your photos and videos to your library.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -389,7 +390,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = io.github.yahiaangelo.Film.Camera;
+				PRODUCT_BUNDLE_IDENTIFIER = io.github.yahiaangelo.FilmCamera;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -412,11 +413,12 @@
 				ENABLE_PREVIEWS = YES;
 				"EXCLUDED_SOURCE_FILE_NAMES[sdk=iphoneos*]" = SampleScene.jpg;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = "Film Camera";
+				INFOPLIST_KEY_CFBundleDisplayName = "Film Camera (Film Simulations)";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.photography";
-				INFOPLIST_KEY_NSCameraUsageDescription = "Film Camera uses the camera to take photos with film looks.";
-				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Film Camera saves your photos to your library.";
+				INFOPLIST_KEY_NSCameraUsageDescription = "Film Camera uses the camera to take photos and Super 8 videos with film looks.";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Film Camera records sound with your Super 8 videos.";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Film Camera saves your photos and videos to your library.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -426,7 +428,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = io.github.yahiaangelo.Film.Camera;
+				PRODUCT_BUNDLE_IDENTIFIER = io.github.yahiaangelo.FilmCamera;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;

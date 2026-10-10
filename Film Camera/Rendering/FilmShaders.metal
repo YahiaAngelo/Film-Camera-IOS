@@ -34,6 +34,14 @@ struct FilmUniforms {
     float aspect;
     float uvScaleX, uvScaleY;
     float uvOffsetX, uvOffsetY;
+    // Super 8 (all zero in photo mode)
+    float super8;
+    float weaveX, weaveY;
+    float flicker;
+    float dust;
+    float scratchX, scratchStrength;
+    float flash;
+    float softness;
 };
 
 constant float3 kLuma = float3(0.2126, 0.7152, 0.0722);
@@ -175,6 +183,52 @@ inline float3 grainNoise(float2 p, uint seed, uint salt) {
     return mix(mix(n00, n10, w.x), mix(n01, n11, w.x), w.y) * 1.6;
 }
 
+// Per-frame Super 8 artifacts: flicker, the cartridge-start light flash, dust,
+// scratches and the rounded projector gate. `p` is the fixed gate position.
+inline float3 super8Artifacts(float3 c, float2 p, constant FilmUniforms &u) {
+    uint seed = uint(u.grainSeed) * 2654435761u + 97u;
+
+    // Exposure flicker from frame to frame.
+    c *= u.flicker;
+
+    // Light flash on the first frames of a clip.
+    c = mix(c, 1.0 - (1.0 - c) * (1.0 - float3(1.0, 0.55, 0.22)), u.flash);
+
+    // Dust: sparse soft specks, different on every frame. Mostly dark (dirt on
+    // the film), sometimes light (dirt on the negative).
+    if (u.dust > 0.0) {
+        float2 cellCoord = p * float2(u.aspect, 1.0) * 46.0;
+        int2 cell = int2(floor(cellCoord));
+        float3 h = float3(pcg3d(uint3(uint2(cell), seed ^ 0x5bd1e995u))) * (1.0 / 4294967295.0);
+        if (h.x > 1.0 - 0.035 * u.dust) {
+            float3 k = float3(pcg3d(uint3(uint2(cell), seed ^ 0x1b873593u))) * (1.0 / 4294967295.0);
+            float2 center = float2(cell) + 0.2 + k.xy * 0.6;
+            float radius = 0.06 + k.z * 0.22;
+            // Slightly elongated specks read as fibers and dirt rather than dots.
+            float2 d = (cellCoord - center) * float2(1.0, 0.55 + h.y);
+            float speck = 1.0 - smoothstep(radius * 0.6, radius, length(d));
+            c = h.z > 0.8 ? mix(c, float3(0.95), speck * 0.8) : c * (1.0 - speck * 0.9);
+        }
+    }
+
+    // A vertical scratch that lingers for a few frames.
+    if (u.scratchStrength > 0.0) {
+        float line = 1.0 - smoothstep(0.0, 0.0016, abs(p.x - u.scratchX));
+        float breakup = 0.6 + 0.4 * sin(p.y * 37.0 + u.grainSeed);
+        c = mix(c, float3(0.92, 0.9, 0.85), line * breakup * u.scratchStrength);
+    }
+
+    // Rounded gate with a soft edge; outside is black. Signed distance to a
+    // rounded box in units of half the image height, so corners stay circular.
+    float2 P = (p - 0.5) * 2.0 * float2(u.aspect, 1.0);
+    float2 halfSize = float2(u.aspect, 1.0) * 0.975;
+    float radius = 0.14;
+    float2 q = abs(P) - halfSize + radius;
+    float dist = length(max(q, 0.0)) + min(max(q.x, q.y), 0.0) - radius;
+    c *= 1.0 - smoothstep(-0.02, 0.004, dist);
+    return c;
+}
+
 fragment float4 filmComposite(VertexOut in                 [[stage_in]],
                               texture2d<float> graded      [[texture(0)]],
                               texture2d<float> bloom       [[texture(1)]],
@@ -182,8 +236,21 @@ fragment float4 filmComposite(VertexOut in                 [[stage_in]],
 {
     constexpr sampler s(filter::linear, address::clamp_to_edge);
     float2 uv = float2(u.uvOffsetX, u.uvOffsetY) + in.uv * float2(u.uvScaleX, u.uvScaleY);
+    bool super8 = u.super8 > 0.5;
+    // The gate stays fixed while the picture weaves inside it.
+    float2 gateUV = uv;
+    if (super8) uv += float2(u.weaveX, u.weaveY);
 
-    float3 c = graded.sample(s, uv).rgb;
+    float3 c;
+    if (super8) {
+        // Super 8's tiny frame is soft: a small tent blur.
+        float2 o = float2(u.softness / u.aspect, u.softness);
+        c = (graded.sample(s, uv).rgb * 2.0 +
+             graded.sample(s, uv + float2(o.x, 0)).rgb + graded.sample(s, uv - float2(o.x, 0)).rgb +
+             graded.sample(s, uv + float2(0, o.y)).rgb + graded.sample(s, uv - float2(0, o.y)).rgb) / 6.0;
+    } else {
+        c = graded.sample(s, uv).rgb;
+    }
     float3 b = bloom.sample(s, uv).rgb;
 
     // Glow: soft screen-blended bloom.
@@ -218,6 +285,10 @@ fragment float4 filmComposite(VertexOut in                 [[stage_in]],
         float chroma = saturate(length(c - l) * 4.0);
         float3 dye = float3(g.y, -0.5 * (g.y + g.z), g.z) * 0.25 * chroma;
         c += (g.x + dye) * u.grain * 0.11 * response;
+    }
+
+    if (super8) {
+        c = super8Artifacts(c, gateUV, u);
     }
 
     return float4(saturate(c), 1.0);

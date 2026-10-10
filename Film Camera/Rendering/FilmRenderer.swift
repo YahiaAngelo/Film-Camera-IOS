@@ -35,6 +35,61 @@ nonisolated struct FilmUniforms {
     var aspect: Float = 1
     var uvScaleX: Float = 1, uvScaleY: Float = 1
     var uvOffsetX: Float = 0, uvOffsetY: Float = 0
+    // Super 8 (all zero in photo mode)
+    var super8: Float = 0
+    var weaveX: Float = 0, weaveY: Float = 0
+    var flicker: Float = 1
+    var dust: Float = 0
+    var scratchX: Float = 0, scratchStrength: Float = 0
+    var flash: Float = 0
+    var softness: Float = 0
+}
+
+/// Per-film-frame Super 8 artifacts, derived deterministically from the frame
+/// number so the preview and the recording show exactly the same thing.
+nonisolated struct Super8FrameEffects: Equatable {
+    var weaveX: Float = 0
+    var weaveY: Float = 0
+    var flicker: Float = 1
+    var scratchX: Float = 0
+    var scratchStrength: Float = 0
+    var flash: Float = 0
+
+    /// Frames over which the cartridge-start light flash fades out.
+    static let flashFrames = 10
+
+    /// - Parameters:
+    ///   - frame: running film frame number.
+    ///   - clipFrame: frame number within the current recording, or `nil` when not recording.
+    static func make(frame: UInt32, clipFrame: Int?, adjustments a: FilmAdjustments) -> Super8FrameEffects {
+        var e = Super8FrameEffects()
+        let f = Float(frame)
+        // Gate weave: jittery claw pull-down, mostly vertical, plus a slow drift.
+        let weave = a.gateWeave * 2
+        e.weaveX = ((random(frame, 1) - 0.5) * 0.0018 + sin(f * 0.23 + 1) * 0.0008) * weave
+        e.weaveY = ((random(frame, 2) - 0.5) * 0.0045 + sin(f * 0.37) * 0.0012) * weave
+        // Exposure flicker.
+        e.flicker = 1 + (random(frame, 3) - 0.5) * 0.14 * a.flicker
+        // A scratch appears now and then and lingers for about half a second.
+        let event = frame / 10
+        if random(event, 4) < 0.3 * a.dust {
+            e.scratchX = 0.08 + random(event, 5) * 0.84 + (random(frame, 6) - 0.5) * 0.002
+            e.scratchStrength = (0.25 + random(event, 7) * 0.35) * min(1, a.dust * 1.5)
+        }
+        if let clipFrame, clipFrame < flashFrames {
+            e.flash = pow(1 - Float(clipFrame) / Float(flashFrames), 1.5) * 0.9
+        }
+        return e
+    }
+
+    /// Deterministic 0..<1 value for a frame and a channel (SplitMix64).
+    static func random(_ frame: UInt32, _ channel: UInt64) -> Float {
+        var z = UInt64(frame) &* 0x9E37_79B9_7F4A_7C15 &+ channel &* 0xBF58_476D_1CE4_E5B9
+        z = (z ^ (z >> 30)) &* 0xBF58_476D_1CE4_E5B9
+        z = (z ^ (z >> 27)) &* 0x94D0_49BB_1331_11EB
+        z ^= z >> 31
+        return Float(z >> 40) / Float(1 << 24)
+    }
 }
 
 /// Renders camera frames through the film pipeline. The live preview and the
@@ -60,10 +115,16 @@ nonisolated final class FilmRenderer: @unchecked Sendable {
     private var adjustments = FilmAdjustments.default
     private var latestFrame: CVPixelBuffer?
     private var blurCache: [Int: MPSImageGaussianBlur] = [:]
+    private var super8Enabled = false
+    /// Counts camera frames in Super 8 mode; each one is a "film frame".
+    private var filmFrame: UInt32 = 0
+    private var clipStartFrame: UInt32?
 
     // Preview-only intermediates, touched on the main thread.
     private var previewTargets: Intermediates?
     private var frameIndex: UInt32 = 0
+    // Video-only intermediates, touched only by the recorder's serial queue.
+    private var videoTargets: Intermediates?
 
     static let previewPixelFormat: MTLPixelFormat = .bgra8Unorm
 
@@ -135,7 +196,23 @@ nonisolated final class FilmRenderer: @unchecked Sendable {
     }
 
     func enqueue(frame: CVPixelBuffer) {
-        lock.withLock { latestFrame = frame }
+        lock.withLock {
+            latestFrame = frame
+            if super8Enabled { filmFrame &+= 1 }
+        }
+    }
+
+    func setSuper8(_ enabled: Bool) {
+        lock.withLock { super8Enabled = enabled }
+    }
+
+    /// Marks the current film frame as the start of a recording (for the start flash).
+    func beginClip() {
+        lock.withLock { clipStartFrame = filmFrame &+ 1 }
+    }
+
+    func endClip() {
+        lock.withLock { clipStartFrame = nil }
     }
 
     /// Size of the most recent preview frame, used to map taps to the sensor.
@@ -174,9 +251,12 @@ nonisolated final class FilmRenderer: @unchecked Sendable {
         let visibleV = drawableSize.height / (Double(height) * scale)
 
         var uniforms = makeUniforms(imageWidth: width, imageHeight: height)
-        // New grain every frame, so it dances like projected film.
-        frameIndex &+= 1
-        uniforms.grainSeed = Float(frameIndex % 65_536)
+        if uniforms.super8 == 0 {
+            // New grain every drawn frame, so it dances like projected film.
+            // (In Super 8 mode grain follows the film frame instead.)
+            frameIndex &+= 1
+            uniforms.grainSeed = Float(frameIndex % 65_536)
+        }
         uniforms.uvScaleX = Float(visibleU)
         uniforms.uvScaleY = Float(visibleV)
         uniforms.uvOffsetX = Float((1 - visibleU) / 2)
@@ -205,7 +285,7 @@ nonisolated final class FilmRenderer: @unchecked Sendable {
                                             storage: .shared)
         else { return nil }
 
-        var uniforms = makeUniforms(imageWidth: width, imageHeight: height)
+        var uniforms = makeUniforms(imageWidth: width, imageHeight: height, super8: false)
         uniforms.grainSeed = Float(UInt32.random(in: 0..<65_536))
         let pass = MTLRenderPassDescriptor()
         pass.colorAttachments[0].texture = output
@@ -221,10 +301,42 @@ nonisolated final class FilmRenderer: @unchecked Sendable {
         return Self.makeCGImage(from: output)
     }
 
+    // MARK: - Video
+
+    /// Renders one Super 8 frame into `output` (a BGRA buffer from the writer's
+    /// pool), scaling to its size. Call from a single serial queue.
+    func renderVideoFrame(_ source: CVPixelBuffer, into output: CVPixelBuffer) -> Bool {
+        guard let sourceTexture = makeTexture(from: source),
+              let outputTexture = makeTexture(from: output),
+              let commandBuffer = commandQueue.makeCommandBuffer()
+        else { return false }
+
+        let width = sourceTexture.width
+        let height = sourceTexture.height
+        if videoTargets?.width != width || videoTargets?.height != height {
+            videoTargets = makeIntermediates(width: width, height: height, format: .rgba16Float)
+        }
+        guard let targets = videoTargets else { return false }
+
+        var uniforms = makeUniforms(imageWidth: width, imageHeight: height)
+        let pass = MTLRenderPassDescriptor()
+        pass.colorAttachments[0].texture = outputTexture
+        pass.colorAttachments[0].loadAction = .dontCare
+        pass.colorAttachments[0].storeAction = .store
+
+        let bloom = encodeGradeAndBloom(source: sourceTexture, targets: targets, uniforms: &uniforms, commandBuffer: commandBuffer)
+        encodeComposite(graded: targets.graded, bloom: bloom, pass: pass, uniforms: &uniforms, commandBuffer: commandBuffer)
+        commandBuffer.commit()
+        commandBuffer.waitUntilCompleted()
+        return commandBuffer.status == .completed
+    }
+
     // MARK: - Encoding
 
-    private func makeUniforms(imageWidth: Int, imageHeight: Int) -> FilmUniforms {
+    /// - Parameter super8: pass `false` to force the photo look (e.g. for stills).
+    private func makeUniforms(imageWidth: Int, imageHeight: Int, super8: Bool? = nil) -> FilmUniforms {
         let (lut, hasFilm, a) = snapshot()
+        let (super8Enabled, filmFrame, clipStart) = lock.withLock { (self.super8Enabled, self.filmFrame, clipStartFrame) }
         var u = FilmUniforms()
         u.exposure = a.exposure
         u.contrast = a.contrast
@@ -247,6 +359,26 @@ nonisolated final class FilmRenderer: @unchecked Sendable {
         u.vignette = a.vignette
         // Keeps grain cells square regardless of the image's aspect ratio.
         u.aspect = Float(imageWidth) / Float(imageHeight)
+
+        if super8 ?? super8Enabled {
+            let clipFrame = clipStart.map { Int(Int32(bitPattern: filmFrame &- $0)) }.flatMap { $0 >= 0 ? $0 : nil }
+            let e = Super8FrameEffects.make(frame: filmFrame, clipFrame: clipFrame, adjustments: a)
+            u.super8 = 1
+            u.weaveX = e.weaveX
+            u.weaveY = e.weaveY
+            u.flicker = e.flicker
+            u.scratchX = e.scratchX
+            u.scratchStrength = e.scratchStrength
+            u.flash = e.flash
+            u.dust = a.dust
+            u.softness = 0.0009
+            // A Super 8 frame is tiny, so grain is large relative to the picture.
+            u.grain = max(a.grain, 0.45) * 1.25
+            u.grainScale = 620 / (1 + a.grainSize * 1.5)
+            u.vignette = max(a.vignette, 0.5)
+            // Grain and dust change once per film frame, not per screen refresh.
+            u.grainSeed = Float(filmFrame % 65_536)
+        }
         return u
     }
 

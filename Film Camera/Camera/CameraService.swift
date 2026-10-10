@@ -46,16 +46,26 @@ nonisolated enum CameraError: LocalizedError {
 
 /// Owns the `AVCaptureSession`. All session work happens on a private serial
 /// queue; preview frames are delivered on a high-priority video queue.
-nonisolated final class CameraService: NSObject, @unchecked Sendable, AVCaptureVideoDataOutputSampleBufferDelegate {
+nonisolated final class CameraService: NSObject, @unchecked Sendable,
+                                       AVCaptureVideoDataOutputSampleBufferDelegate,
+                                       AVCaptureAudioDataOutputSampleBufferDelegate {
     let session = AVCaptureSession()
 
-    /// Called on the video queue for every preview frame (upright portrait, BGRA).
-    var onFrame: (@Sendable (CVPixelBuffer) -> Void)?
+    /// Called on the video queue for every preview frame (upright portrait, BGRA),
+    /// with its presentation time.
+    var onFrame: (@Sendable (CVPixelBuffer, CMTime) -> Void)?
+    /// Called on the audio queue with microphone samples while audio is enabled.
+    var onAudio: (@Sendable (CMSampleBuffer) -> Void)?
 
     private let sessionQueue = DispatchQueue(label: "FilmCamera.session")
     private let videoQueue = DispatchQueue(label: "FilmCamera.video", qos: .userInteractive)
     private let videoOutput = AVCaptureVideoDataOutput()
     private let photoOutput = AVCapturePhotoOutput()
+    private let audioQueue = DispatchQueue(label: "FilmCamera.audio")
+    private let audioOutput = AVCaptureAudioDataOutput()
+    private var audioInput: AVCaptureDeviceInput?
+    /// Fixed capture frame rate for Super 8 mode; `nil` uses the format default.
+    private var targetFrameRate: Int?
     private var deviceInput: AVCaptureDeviceInput?
     private var isConfigured = false
     /// Rotation that makes preview frames upright; set by `CameraModel` from the
@@ -66,10 +76,10 @@ nonisolated final class CameraService: NSObject, @unchecked Sendable, AVCaptureV
     private let lock = NSLock()
     private var inFlightCaptures: [Int64: PhotoCaptureDelegate] = [:]
 
-    static func requestAccess() async -> Bool {
-        switch AVCaptureDevice.authorizationStatus(for: .video) {
+    static func requestAccess(for mediaType: AVMediaType = .video) async -> Bool {
+        switch AVCaptureDevice.authorizationStatus(for: mediaType) {
         case .authorized: true
-        case .notDetermined: await AVCaptureDevice.requestAccess(for: .video)
+        case .notDetermined: await AVCaptureDevice.requestAccess(for: mediaType)
         default: false
         }
     }
@@ -154,6 +164,7 @@ nonisolated final class CameraService: NSObject, @unchecked Sendable, AVCaptureV
         if device.isFocusModeSupported(.continuousAutoFocus) { device.focusMode = .continuousAutoFocus }
         if device.isExposureModeSupported(.continuousAutoExposure) { device.exposureMode = .continuousAutoExposure }
         device.videoZoomFactor = Self.defaultZoom(for: device)
+        Self.apply(frameRate: targetFrameRate, to: device)
         device.unlockForConfiguration()
 
         // 12 MP keeps full-resolution Metal processing fast and memory friendly.
@@ -227,6 +238,71 @@ nonisolated final class CameraService: NSObject, @unchecked Sendable, AVCaptureV
         guard hasUltraWide, let first = device.virtualDeviceSwitchOverVideoZoomFactors.first else { return 1 }
         return CGFloat(truncating: first)
     }
+
+    // MARK: - Super 8
+
+    /// Switches between photo and Super 8 capture: fixes the camera's frame rate
+    /// (a real low frame rate, with the longer exposure per frame that brings)
+    /// and adds or removes the microphone.
+    func configureVideoMode(frameRate: Int?, recordsAudio: Bool) async {
+        _ = try? await onSessionQueue {
+            self.targetFrameRate = frameRate
+            if let device = self.deviceInput?.device, (try? device.lockForConfiguration()) != nil {
+                Self.apply(frameRate: frameRate, to: device)
+                device.unlockForConfiguration()
+            }
+            self.setAudioEnabled(recordsAudio)
+        }
+    }
+
+    /// Writer settings matching the microphone output, or `nil` without audio.
+    func recommendedAudioSettings() async -> [String: Any]? {
+        let settings = try? await onSessionQueue { () -> UncheckedBox<[String: Any]?> in
+            guard self.audioInput != nil else { return UncheckedBox(value: nil) }
+            return UncheckedBox(value: self.audioOutput.recommendedAudioSettingsForAssetWriter(writingTo: .mov))
+        }
+        return settings?.value
+    }
+
+    private func setAudioEnabled(_ enabled: Bool) {
+        guard enabled != (audioInput != nil) else { return }
+        session.beginConfiguration()
+        defer { session.commitConfiguration() }
+        if enabled {
+            guard let mic = AVCaptureDevice.default(for: .audio),
+                  let input = try? AVCaptureDeviceInput(device: mic),
+                  session.canAddInput(input)
+            else { return }
+            session.addInput(input)
+            audioInput = input
+            if !session.outputs.contains(audioOutput), session.canAddOutput(audioOutput) {
+                audioOutput.setSampleBufferDelegate(self, queue: audioQueue)
+                session.addOutput(audioOutput)
+            }
+        } else {
+            if let audioInput { session.removeInput(audioInput) }
+            audioInput = nil
+            session.removeOutput(audioOutput)
+        }
+    }
+
+    /// Must be called with the device locked for configuration.
+    private static func apply(frameRate: Int?, to device: AVCaptureDevice) {
+        guard let frameRate else {
+            device.activeVideoMinFrameDuration = .invalid
+            device.activeVideoMaxFrameDuration = .invalid
+            return
+        }
+        let fps = Float64(frameRate)
+        guard device.activeFormat.videoSupportedFrameRateRanges.contains(where: { $0.minFrameRate <= fps && fps <= $0.maxFrameRate })
+        else { return }
+        let duration = CMTime(value: 1, timescale: CMTimeScale(frameRate))
+        device.activeVideoMinFrameDuration = duration
+        device.activeVideoMaxFrameDuration = duration
+    }
+
+    /// Rotation for a recording started now, relative to the upright preview frames.
+    var previewRotation: CGFloat { previewRotationAngle }
 
     // MARK: - Controls
 
@@ -308,9 +384,18 @@ nonisolated final class CameraService: NSObject, @unchecked Sendable, AVCaptureV
     // MARK: - AVCaptureVideoDataOutputSampleBufferDelegate
 
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+        if output === audioOutput {
+            onAudio?(sampleBuffer)
+            return
+        }
         guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return }
-        onFrame?(pixelBuffer)
+        onFrame?(pixelBuffer, CMSampleBufferGetPresentationTimeStamp(sampleBuffer))
     }
+}
+
+/// Carries a non-Sendable value across the session queue boundary.
+nonisolated struct UncheckedBox<Value>: @unchecked Sendable {
+    let value: Value
 }
 
 /// Holds the continuation for one in-flight photo capture.

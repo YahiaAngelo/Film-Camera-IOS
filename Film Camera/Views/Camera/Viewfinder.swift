@@ -63,12 +63,22 @@ struct Viewfinder: View {
         .aspectRatio(3 / 4, contentMode: .fit)
         .clipShape(.rect(cornerRadius: 24))
         .overlay(alignment: .top) {
-            filmChip.padding(.top, 12)
+            VStack(spacing: 8) {
+                filmChip
+                if camera.mode == .super8 {
+                    Super8Counter()
+                        .transition(.scale(scale: 0.8).combined(with: .opacity))
+                }
+            }
+            .padding(.top, 12)
+            .animation(.spring(duration: 0.3), value: camera.mode)
         }
         .overlay(alignment: .bottom) {
             ZoomControl().padding(.bottom, 12)
         }
         .onChange(of: camera.shutterCount) {
+            // The shutter blink is for photos; recording has its own indicator.
+            guard camera.mode == .photo else { return }
             shutterFlash = true
             withAnimation(.easeOut(duration: 0.3)) { shutterFlash = false }
         }
@@ -157,5 +167,47 @@ private struct FocusIndicator: View {
             .onAppear {
                 withAnimation(.spring(duration: 0.3)) { settled = true }
             }
+    }
+}
+
+/// Super 8 status: the cartridge footage counter, and the running time while recording.
+private struct Super8Counter: View {
+    @Environment(CameraModel.self) private var camera
+    @State private var blink = false
+
+    var body: some View {
+        HStack(spacing: 10) {
+            if camera.isRecording {
+                Circle()
+                    .fill(Color(red: 0.96, green: 0.23, blue: 0.19))
+                    .frame(width: 8, height: 8)
+                    .opacity(blink ? 0.25 : 1)
+                    .animation(.easeInOut(duration: 0.6).repeatForever(), value: blink)
+                    .onAppear { blink = true }
+                    .onDisappear { blink = false }
+                Text(Duration.seconds(camera.recordedDuration), format: .time(pattern: .minuteSecond))
+                    .monospacedDigit()
+                Text("·").foregroundStyle(.secondary)
+            }
+            Text("\(camera.feetRemaining) FT")
+                .monospacedDigit()
+                .foregroundStyle(camera.feetRemaining <= 5 ? Color(red: 0.96, green: 0.23, blue: 0.19) : Color.filmPrimary)
+                .contentTransition(.numericText(value: Double(camera.feetRemaining)))
+            if !camera.isRecording {
+                Text("·").foregroundStyle(.secondary)
+                Text("\(camera.super8FrameRate) FPS")
+                    .monospacedDigit()
+                    .foregroundStyle(.secondary)
+            }
+        }
+        .font(.caption.weight(.semibold))
+        .padding(.horizontal, 12)
+        .padding(.vertical, 6)
+        .glassEffect(.regular, in: .capsule)
+        .animation(.default, value: camera.feetRemaining)
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(camera.isRecording
+            ? "Recording, \(Int(camera.recordedDuration)) seconds, \(camera.feetRemaining) feet of film left"
+            : "\(camera.feetRemaining) feet of film, \(camera.super8FrameRate) frames per second")
     }
 }

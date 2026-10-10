@@ -1,16 +1,20 @@
 # Privacy Policy
 
-_Last updated: September 25, 2026_
+_Last updated: September 28, 2026_
 
 Film Camera does not collect, store or share any personal data.
 
 ## Camera
 
-Film Camera uses the camera only to show the live preview and take the photos you ask for. Camera frames are processed on your device and are never uploaded.
+Film Camera uses the camera only to show the live preview and take the photos and videos you ask for. Camera frames are processed on your device and are never uploaded.
 
-## Photos
+## Microphone
 
-Photos you take are saved to your photo library, with your permission. Film Camera asks only for permission to **add** photos. It cannot read the rest of your library.
+In Super 8 mode, Film Camera uses the microphone, with your permission, to record sound with your videos. Audio is recorded on your device only, into the video you're filming. It is never uploaded.
+
+## Photos and videos
+
+Photos and videos you take are saved to your photo library, with your permission. Film Camera asks only for permission to **add** to your library. It cannot read the rest of your library.
 
 ## Network
 
